@@ -1,0 +1,72 @@
+name: Contract test suite
+description: Tests for verifying the contract resource policy
+
+principals:
+  userA:
+    id: user:1
+    roles:
+      - USER
+
+  userB:
+    id: user:2
+    roles:
+      - USER
+
+  userC:
+    id: user:3
+    roles:
+      - USER
+
+  adminA:
+    id: user:99
+    roles:
+      - ADMIN
+
+resources:
+  contractOwnedByUserA:
+    id: contract:1
+    kind: contract
+    attr:
+      ownerId: user:1
+
+  contractCommentedByUserB:
+    id: contract:2
+    kind: contract
+    attr:
+      commentAuthors:
+        - user:2
+
+tests:
+  - name: Viewable and editable by owner
+    input:
+      principals:
+        - userA
+      resources:
+        - contractOwnedByUserA
+      actions:
+        - contract:view
+        - contract:edit
+
+    expected:
+      - principal: userA
+        resource: contractOwnedByUserA
+        actions:
+          contract:view: EFFECT_ALLOW
+          contract:edit: EFFECT_ALLOW
+
+  - name: Viewable by comment author
+    input:
+      principals:
+        - userB
+      resources:
+        - contractCommentedByUserB
+      actions:
+        - contract:view
+        - contract:edit
+
+    expected:
+      - principal: userB
+        resource: contractCommentedByUserB
+        actions:
+          contract:view: EFFECT_ALLOW
+          contract:edit: EFFECT_DENY

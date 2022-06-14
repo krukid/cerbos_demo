@@ -1,0 +1,24 @@
+apiVersion: api.cerbos.dev/v1
+resourcePolicy:
+  version: default
+  resource: contract
+  importDerivedRoles:
+    - support_roles
+  rules:
+    - actions:
+        - "contract:*"
+      effect: EFFECT_ALLOW
+      roles:
+        - ADMIN
+  
+    - actions:
+        - "contract:*"
+      effect: EFFECT_ALLOW
+      derivedRoles:
+        - CONTRACT_OWNER  
+
+    - actions:
+        - "contract:view"
+      effect: EFFECT_ALLOW
+      derivedRoles:
+        - CONTRACT_COMMENT_AUTHOR

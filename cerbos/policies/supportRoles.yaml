@@ -1,0 +1,16 @@
+---
+apiVersion: "api.cerbos.dev/v1"
+derivedRoles:
+  name: support_roles
+  definitions:
+    - name: CONTRACT_OWNER
+      parentRoles: ["USER"]
+      condition:
+        match:
+          expr: P.id == R.attr.ownerId
+
+    - name: CONTRACT_COMMENT_AUTHOR
+      parentRoles: ["USER"]
+      condition:
+        match:
+          expr: P.id in R.attr.commentAuthors
